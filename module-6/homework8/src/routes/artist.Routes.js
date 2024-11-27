@@ -4,14 +4,16 @@ import { ArtistController } from "../controllers/artists.controller.js";
 const router = Router();
 const controller = new ArtistController();
 
-router.get("/artist",  controller.getArtists);
+router.get("/artists",  controller.getArtists);
 
-router.get("/artist/:id", controller.getArtistById);
+router.get("/artists/:id", controller.getArtistById);
 
-router.post("/artist", controller.create);
+router.get("/artists/:id/songs", controller.getSongsByArtistId)
 
-router.put("/artist/:id", controller.updateArtist);
+router.post("/artists", controller.create);
 
-router.delete("/artist/:id", controller.deleteArtist);
+router.put("/artists/:id", controller.updateArtist);
+
+router.delete("/artists/:id", controller.deleteArtist);
 
 export default router;

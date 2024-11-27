@@ -29,7 +29,7 @@ export const Song = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    coverurl: {
+    coverUrl: {
       type: DataTypes.STRING,
       allowNull: false,
     },

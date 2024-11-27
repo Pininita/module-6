@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db/sequelize.js";
+import { Song } from "./song.model.js";
 
 export const Artist = sequelize.define(
   "artist",
@@ -17,7 +18,7 @@ export const Artist = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    photourl: {
+    photoUrl: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -27,3 +28,13 @@ export const Artist = sequelize.define(
     timestamps: false,
   }
 );
+
+Artist.hasMany(Song, {
+  foreignKey: 'artistId',
+  sourceKey: 'id'
+});
+
+Song.belongsTo(Artist, {
+  foreignKey: 'artistId',
+  targetKey: 'id'
+})

@@ -1,4 +1,6 @@
+import { where } from "sequelize";
 import { Artist } from "../models/artists.model.js";
+import { Song } from "../models/song.model.js";
 
 export class ArtistController {
 
@@ -40,19 +42,39 @@ export class ArtistController {
     }
   }
 
+  getSongsByArtistId = async (req, res) => {
+    try {
+      const artistId= parseInt(req.params.id)
 
+      const artist = await Artist.findByPk(artistId)
+
+      if (!artist) {
+        return res.status(404).json({ message: "Artist not found" });
+      }
+
+      const songs = await Song.findAll({where: {artistId}})
+
+      if (songs.length === 0) {
+        return res.status(404).json({ message: "No songs found for this artist" });
+      }
+      res.json(songs);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
 
   create = async (req, res) => {
     try {
-      const { name, bio, photourl } = req.body;
+      const { name, bio, photoUrl } = req.body;
       console.log(req.body);
 
-      if (!name || !bio || !photourl) {
+      if (!name || !bio || !photoUrl) {
         return res.status(400).json({ message: "All fields are required" });
       }
 
       const artist = await Artist.create(
-        { name, bio, photourl },
+        { name, bio, photoUrl },
       );
 
       res.status(201).json(artist);
@@ -66,13 +88,13 @@ export class ArtistController {
     try {
       const id = parseInt(req.params.id);
 
-      const { name, bio, photourl } = req.body;
+      const { name, bio, photoUrl } = req.body;
 
-      if (!name || !bio || !photourl) {
+      if (!name || !bio || !photoUrl) {
         return res.status(400).json({ message: "All fields are required" });
       }
 
-      //const artist = await artist.update({name, bio, photourl}, {where: { id}})
+      //const artist = await artist.update({name, bio, photoUrl}, {where: { id}})
       const artist = await Artist.findByPk(id);
 
       if (!artist)
@@ -81,7 +103,7 @@ export class ArtistController {
       artist.set({
         name,
         bio,
-        photourl,
+        photoUrl,
       })
 
       await artist.save();

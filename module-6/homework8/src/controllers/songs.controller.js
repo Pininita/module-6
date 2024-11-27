@@ -44,15 +44,15 @@ export class SongController {
 
   create = async (req, res) => {
     try {
-      const { title , artistId, releaseYear, duration, coverurl } = req.body;
+      const { title , artistId, releaseYear, duration, coverUrl } = req.body;
       console.log(req.body);
 
-      if (!title || !artistId || !releaseYear || !duration || !coverurl) {
+      if (!title || !artistId || !releaseYear || !duration || !coverUrl) {
         return res.status(400).json({ message: "All fields are required" });
       }
 
       const song = await Song.create(
-        { title , artistId, releaseYear, duration, coverurl },
+        { title , artistId, releaseYear, duration, coverUrl },
       );
 
       res.status(201).json(song);
@@ -66,9 +66,9 @@ export class SongController {
     try {
       const id = parseInt(req.params.id);
 
-      const { title , artistId, releaseYear, duration, coverurl } = req.body;
+      const { title , artistId, releaseYear, duration, coverUrl } = req.body;
 
-      if (!title || !artistId || !releaseYear || !duration || !coverurl) {
+      if (!title || !artistId || !releaseYear || !duration || !coverUrl) {
         return res.status(400).json({ message: "All fields are required" });
       }
 
@@ -83,7 +83,7 @@ export class SongController {
         artistId, 
         releaseYear, 
         duration, 
-        coverurl 
+        coverUrl 
       })
 
       await song.save();
