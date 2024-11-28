@@ -10,6 +10,8 @@ router.get("/artists/:id", controller.getArtistById);
 
 router.get("/artists/:id/songs", controller.getSongsByArtistId)
 
+router.get("/artists-by-song-duration/:duration", controller.getArtistBySongDuration)
+
 router.post("/artists", controller.create);
 
 router.put("/artists/:id", controller.updateArtist);

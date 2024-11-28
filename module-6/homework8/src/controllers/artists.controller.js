@@ -21,9 +21,6 @@ export class ArtistController {
     }
   }
 
-
-
-
   getArtistById = async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -44,7 +41,7 @@ export class ArtistController {
 
   getSongsByArtistId = async (req, res) => {
     try {
-      const artistId= parseInt(req.params.id)
+      const artistId = parseInt(req.params.id)
 
       const artist = await Artist.findByPk(artistId)
 
@@ -52,12 +49,43 @@ export class ArtistController {
         return res.status(404).json({ message: "Artist not found" });
       }
 
-      const songs = await Song.findAll({where: {artistId}})
+      const songs = await Song.findAll({ where: { artistId } })
 
       if (songs.length === 0) {
         return res.status(404).json({ message: "No songs found for this artist" });
       }
       res.json(songs);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  getArtistBySongDuration = async (req, res) => {
+    try {
+      const { duration } = req.params;
+
+      const durationInSeconds = parseInt(duration, 10)
+
+      if (isNaN(durationInSeconds)) {
+        return res.status(400).json({ message: "Invalid duration parameter" });
+      }
+
+      const artists = await Artist.findAll({
+        include: {
+          model: Song,
+          where: {
+            duration: { [Sequelize.Op.gte]: durationInSeconds }
+          },
+          attributes: ['id', 'title', 'duration']
+        }
+      });
+
+      if (artists.length === 0) {
+        return res.status(404).json({ message: "No artists found with songs of this duration or longer" });
+      }
+
+      res.json(artists);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
