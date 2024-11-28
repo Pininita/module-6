@@ -1,6 +1,7 @@
 import { where } from "sequelize";
 import { Artist } from "../models/artists.model.js";
 import { Song } from "../models/song.model.js";
+import { Sequelize } from 'sequelize';
 
 export class ArtistController {
 
@@ -65,9 +66,7 @@ export class ArtistController {
     try {
       const { duration } = req.params;
 
-      const durationInSeconds = parseInt(duration, 10)
-
-      if (isNaN(durationInSeconds)) {
+      if (isNaN(duration)) {
         return res.status(400).json({ message: "Invalid duration parameter" });
       }
 
@@ -75,9 +74,10 @@ export class ArtistController {
         include: {
           model: Song,
           where: {
-            duration: { [Sequelize.Op.gte]: durationInSeconds }
+            duration: { [Sequelize.Op.gte]: duration }
           },
-          attributes: ['id', 'title', 'duration']
+          attributes: ['id', 'title', 'duration'],
+          required: true
         }
       });
 
