@@ -1,3 +1,5 @@
+import { where } from "sequelize";
+import { Artist } from "../models/artists.model.js";
 import { Song } from "../models/song.model.js";
 
 export class SongController {
@@ -19,9 +21,6 @@ export class SongController {
     }
   }
 
-
-
-
   getSongById = async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -40,11 +39,41 @@ export class SongController {
     }
   }
 
+  getSongsByArtistId = async (req, res) => {
+    try {
 
+      const artistId = parseInt(req.params.artistId)
+
+      const artist = await Artist.findByPk(artistId)
+
+      if (!artist) {
+        return res.status(404).json({ message: "Artist not found" });
+      }
+
+      const songs = await Song.findAll({ where: { artistId } })
+
+      if (songs.length === 0) {
+        return res.status(404).json({ message: "No songs found for this artist" });
+      }
+
+      res.json(
+        {
+          artist:{
+            id: artist.id,
+            name: artist.name,
+            bio: artist.bio,         
+            songs: songs,
+          }
+        }
+      )
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
 
   create = async (req, res) => {
     try {
-      const { title , artistId, releaseYear, duration, coverUrl } = req.body;
+      const { title, artistId, releaseYear, duration, coverUrl } = req.body;
       console.log(req.body);
 
       if (!title || !artistId || !releaseYear || !duration || !coverUrl) {
@@ -52,7 +81,7 @@ export class SongController {
       }
 
       const song = await Song.create(
-        { title , artistId, releaseYear, duration, coverUrl },
+        { title, artistId, releaseYear, duration, coverUrl },
       );
 
       res.status(201).json(song);
@@ -66,7 +95,7 @@ export class SongController {
     try {
       const id = parseInt(req.params.id);
 
-      const { title , artistId, releaseYear, duration, coverUrl } = req.body;
+      const { title, artistId, releaseYear, duration, coverUrl } = req.body;
 
       if (!title || !artistId || !releaseYear || !duration || !coverUrl) {
         return res.status(400).json({ message: "All fields are required" });
@@ -79,11 +108,11 @@ export class SongController {
         return res.status(404).json({ message: "song not found" });
 
       song.set({
-        title, 
-        artistId, 
-        releaseYear, 
-        duration, 
-        coverUrl 
+        title,
+        artistId,
+        releaseYear,
+        duration,
+        coverUrl
       })
 
       await song.save();

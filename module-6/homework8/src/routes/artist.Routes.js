@@ -8,7 +8,7 @@ router.get("/artists",  controller.getArtists);
 
 router.get("/artists/:id", controller.getArtistById);
 
-router.get("/artists/:id/songs", controller.getSongsByArtistId)
+router.get("/artists/:id/songs", controller.getArtistSongs)
 
 router.get("/artists-by-song-duration/:duration", controller.getArtistBySongDuration)
 

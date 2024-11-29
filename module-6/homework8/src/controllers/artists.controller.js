@@ -40,7 +40,7 @@ export class ArtistController {
     }
   }
 
-  getSongsByArtistId = async (req, res) => {
+  getArtistSongs = async (req, res) => {
     try {
       const artistId = parseInt(req.params.id)
 

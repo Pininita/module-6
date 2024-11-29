@@ -8,6 +8,8 @@ router.get("/songs",  controller.getSongs);
 
 router.get("/songs/:id", controller.getSongById);
 
+router.get("/songs/artist/:artistId", controller.getSongsByArtistId)
+
 router.post("/songs", controller.create);
 
 router.put("/songs/:id", controller.updateSong);
